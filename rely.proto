@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+service Dataset{
+  rpc GetHousingInfoPerCity(GetHousesForCityRequest) returns (GetHousesForCityResponse){}
+  rpc GetUpdatedDataset(GetUpdatedDatasetRequest) returns(GetUpdatedDatasetResponse){}
+}
+
+// message UploadFileRequest {
+//   bytes Data = 1;
+//   string Filename = 2;  }
+
+// The response message containing the greetings
+message GetHousesForCityRequest {
+  string City = 1;
+}
+
+message GetHousesForCityResponse{
+bytes Image = 1;
+string Address = 2;
+float Price = 3;
+string Url = 4;
+string City = 5;
+string State = 6;
+string Zipcode = 7;
+}
+
+
+message GetUpdatedDatasetRequest{
+string url = 1;
+}
+
+message GetUpdatedDatasetResponse{
+bytes Dataset = 1;
+}
+

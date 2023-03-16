@@ -1,0 +1,5 @@
+test/rely/utils/testconfig.cfg
+rely-venv
+.idea/
+go.mod
+go.sum
