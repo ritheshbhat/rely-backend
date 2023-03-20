@@ -1,8 +1,12 @@
+import csv
+import json
 import logging
+import sys
 
 import redis
 
 log = logging.getLogger(__name__)
+
 
 class AppConfig:
 
@@ -14,7 +18,9 @@ class AppConfig:
         self.s3_region = app.config["S3_REGION"]
         self.s3_endpoint = app.config["S3_ENDPOINT"]
         self.tmp_loc = app.config["TMP_LOC"]
-        self.redis = redis.Redis(host=app.config["REDIS_HOST"], port=app.config["REDIS_PORT"], password=app.config["REDIS_PASSWORD"])
+        self.redis = redis.Redis(host=app.config["REDIS_HOST"], port=app.config["REDIS_PORT"],
+                                 password=app.config["REDIS_PASSWORD"])
+
 
 class UserContext:
     def __init__(self, claims):

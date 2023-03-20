@@ -60,26 +60,30 @@ class FileManager:
 
 
 def start_polling(app):
-    while True:
-        log.info("polling for new dataset.")
-        ac = AppConfig(app)
-        fm = FileManager(ac.dataset, ac)
-        fm.download_dataset_and_insert()
-        #load dataset in redis
-        with open('dataset.csv', 'r') as csvfile:
-            csv_reader = csv.DictReader(csvfile)
-            for row in csv_reader:
-                # Get the key from the desired column
-                key = row['CITY']
-                price = row['PRICE']
-                add = row['ADDRESS']
-                url = row['URL']
-                if price == "" or type(price)!=str:
-                    price = 0
-                key = key.replace(" ","").lower()
-                # Convert the row data to a list of key-value pairs
-                row_data = ["address:"+add,"price:"+price,"url:"+url]
-                ac.redis.rpush(key, *row_data)
-
-        log.info("sleeping for 15 minutes")
-        time.sleep(900)
+    pass
+    # while True:
+    #     log.info("polling for new dataset.")
+    #     ac = AppConfig(app)
+    #     fm = FileManager(ac.dataset, ac)
+    #     fm.download_dataset_and_insert()
+    #     ad = []
+    #     #load dataset in redis
+    #     with open('dataset.csv', 'r') as csvfile:
+    #         csv_reader = csv.DictReader(csvfile)
+    #         for row in csv_reader:
+    #             # Get the key from the desired column
+    #             key = row['CITY']
+    #             price = row['PRICE']
+    #             add = row['ADDRESS']
+    #             ad.append(add)
+    #             url = row['URL']
+    #             if price == "" or type(price)!=str:
+    #                 price = 0
+    #             key = key.replace(" ","").lower()
+    #             # Convert the row data to a list of key-value pairs
+    #             row_data = ["address:"+add,"price:"+price,"url:"+url]
+    #             ac.redis.rpush(key, *row_data)
+    #     print("all the address are")
+    #     print(ad)
+    #     log.info("sleeping for 15 minutes")
+    #     time.sleep(900)

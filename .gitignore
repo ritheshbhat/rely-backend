@@ -3,3 +3,4 @@ rely-venv
 .idea/
 go.mod
 go.sum
+src/rely/utils/local_test.py

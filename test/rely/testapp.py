@@ -27,7 +27,7 @@ def create_app():
     with app.app_context():
         from src.rely.resources.Dataset import Dataset
         from src.rely.utils.errorhandler import errors
-        from src.rely.resources.health import Health
+        from src.rely.resources.Health import Health
         ma.init_app(app)
         api.add_resource(Health, API_ROOT + "/health")
         api.add_resource(Dataset, DATASET_API_ROOT + "/<string:city>")
