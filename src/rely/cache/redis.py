@@ -8,15 +8,16 @@ class CacheManager:
     def __init__(self, page_number: int,ac: AppConfig):
         self.ac = ac
         self.page = page_number
+    def __repr__(self):
+        return f"CacheManager(page_number={self.page}, ac={self.ac})"
 
     def get_properties_for_given_address(self, address: str):
         try:
             return self.ac.redis.get(address)
-
         except Exception as e:
             abort(500, f"err-while-retreiving-from-cache => ${e}")
 
-    def get_nearby_properties_from_zip(self, zip: str):
+    def get_nearby_properties_from_zip(self, zip: str, start_index: int, end_index: int):
         try:
 
             return self.ac.redis.lrange(zip,0,-1)

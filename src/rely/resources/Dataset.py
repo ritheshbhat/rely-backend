@@ -26,15 +26,12 @@ class Dataset(Resource):
         property = json.loads(cache.get_properties_for_given_address(address).decode())
         properties.append(property)
         zip = property[2]
-        nearby_properties = cache.get_nearby_properties_from_zip(zip)
         start_index = (page_number - 1) * 2
         end_index = start_index + 2
+        nearby_properties = cache.get_nearby_properties_from_zip(zip, start_index, end_index)
         logging.info("nearby properties are"+str(nearby_properties))
-
-        page_properties = nearby_properties[start_index:end_index]
-        for i in page_properties:
+        for i in nearby_properties:
             properties.append(json.loads(cache.get_properties_for_given_address(i).decode()))
-
         response_data = {"response": str(properties)}
         response = add_response_headers(response_data)
         logging.info(response.json)

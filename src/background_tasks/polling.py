@@ -39,7 +39,6 @@ class FileManager:
             log.debug("downloading-file-from-bucket...")
         except Exception as e:
             log.info("err-while-downloading")
-
             # abort(500, f"err-while-downloading-from-bucket => ${e}")
 
     def delete_local_dataset_file(self):
@@ -58,32 +57,33 @@ class FileManager:
         except Exception as e:
             abort(500, f"err-while-uploading-parsed-output {e}")
 
+    def parse_csv_contents(self):
+        ac = self.ac
+        address = []
+        with open('dataset.csv', 'r') as csvfile:
+            csv_reader = csv.DictReader(csvfile)
+            for row in csv_reader:
+                # Get the key from the desired column
+                key = row['CITY']
+                price = row['PRICE']
+                add = row['ADDRESS']
+                address.append(add)
+                url = row['URL']
+                if price == "" or type(price)!=str:
+                    price = 0
+                key = key.replace(" ","").lower()
+                # Convert the row data to a list of key-value pairs
+                row_data = ["address:"+add,"price:"+price,"url:"+url]
+                # ac.redis.rpush(key, *row_data)
+        log.info("sleeping for 15 minutes")
+        time.sleep(900)
+
 
 def start_polling(app):
-    pass
-    # while True:
-    #     log.info("polling for new dataset.")
-    #     ac = AppConfig(app)
-    #     fm = FileManager(ac.dataset, ac)
-    #     fm.download_dataset_and_insert()
-    #     ad = []
-    #     #load dataset in redis
-    #     with open('dataset.csv', 'r') as csvfile:
-    #         csv_reader = csv.DictReader(csvfile)
-    #         for row in csv_reader:
-    #             # Get the key from the desired column
-    #             key = row['CITY']
-    #             price = row['PRICE']
-    #             add = row['ADDRESS']
-    #             ad.append(add)
-    #             url = row['URL']
-    #             if price == "" or type(price)!=str:
-    #                 price = 0
-    #             key = key.replace(" ","").lower()
-    #             # Convert the row data to a list of key-value pairs
-    #             row_data = ["address:"+add,"price:"+price,"url:"+url]
-    #             ac.redis.rpush(key, *row_data)
-    #     print("all the address are")
-    #     print(ad)
-    #     log.info("sleeping for 15 minutes")
-    #     time.sleep(900)
+     while True:
+        log.info("polling for new dataset.")
+        ac = AppConfig(app)
+        fm = FileManager(ac.dataset, ac)
+        fm.download_dataset_and_insert()
+        time.sleep(3600)
+
