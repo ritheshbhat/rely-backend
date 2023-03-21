@@ -5,6 +5,8 @@ import threading
 from flask_cors import CORS
 
 from flask import Flask
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from src.rely import db, ma
 
@@ -16,8 +18,17 @@ V1_API_ROOT = "{}/v1".format(API_ROOT)
 DATASET_API_ROOT = "{}/dataset".format(V1_API_ROOT)
 
 SEARCH_SUGGESTION_API_ROOT = "{}/suggestion".format(V1_API_ROOT)
+app = Flask(__name__)
+
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
 def create_app():
-    app = Flask(__name__)
+
     api = Api(app)
     load_env_vars(app.config)
 
@@ -32,7 +43,10 @@ def create_app():
         from src.rely.utils.errorhandler import errors
         from src.rely.resources.Health import Health
         from src.rely.resources.Autocomplete import Autocomplete
+        from flask_limiter import Limiter
+        from flask_limiter.util import get_remote_address
         ma.init_app(app)
+
         api.add_resource(Health, API_ROOT + "/health")
         api.add_resource(Dataset, DATASET_API_ROOT + "/<string:addr>")
         api.add_resource(Autocomplete,SEARCH_SUGGESTION_API_ROOT +"/<string:address>")

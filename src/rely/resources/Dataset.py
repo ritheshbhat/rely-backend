@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 from urllib.parse import unquote
@@ -8,30 +9,33 @@ import pandas as pd
 from flask import jsonify, current_app, request, make_response
 from flask_cors import cross_origin
 from flask_restful import Resource
+
+from src.rely.cache.redis import CacheManager
 from src.rely.utils.configs import AppConfig
+from src.rely.utils.utils import add_response_headers
 
 app = current_app._get_current_object()
 
 
-
 class Dataset(Resource):
     def get(self, addr: str):
-        ac = AppConfig(app)
-        decodedPathParam = unquote(addr)
-        print("decoded is", decodedPathParam)
-        #page_number to avoid chocking of database with ALL data.
-        # page_number = int(request.args.get("pno",1))
-        # c = city.replace(" ","").lower()
-        # response = ac.redis.lrange(c,(int(page_number)*3),int(page_number)*3+6)
-        print("inside dataset/", addr)
-        response = ac.redis.get(decodedPathParam)
+        address = unquote(addr)
+        page_number = int(request.args.get("page"))
+        cache = CacheManager(page_number, AppConfig(app))
+        properties = []
+        property = json.loads(cache.get_properties_for_given_address(address).decode())
+        properties.append(property)
+        zip = property[2]
+        nearby_properties = cache.get_nearby_properties_from_zip(zip)
+        start_index = (page_number - 1) * 2
+        end_index = start_index + 2
+        logging.info("nearby properties are"+str(nearby_properties))
 
-        response_data = {"response": str(response)}
-        response = make_response(jsonify(response_data))
-        response.headers['Cache-Control'] = 'no-cache'
-        response.headers['Last-Modified'] = datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
-        response.headers['Content-Type'] = 'application/json'
-        print(":dataset resp", response.json)
-        # return the response
-        logging.info(response)
+        page_properties = nearby_properties[start_index:end_index]
+        for i in page_properties:
+            properties.append(json.loads(cache.get_properties_for_given_address(i).decode()))
+
+        response_data = {"response": str(properties)}
+        response = add_response_headers(response_data)
+        logging.info(response.json)
         return response
