@@ -1,15 +1,15 @@
 import csv
-import time
-# poll for any changes in dataset, and update the database.
-
-import urllib.request
 import os
+import time
+import urllib.request
 
 import boto3
-import pandas as pd
 from werkzeug.exceptions import abort
 
 from src.rely.utils.configs import AppConfig, log
+
+
+# poll for any changes in dataset, and update the database.
 
 
 class FileManager:

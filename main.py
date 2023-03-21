@@ -1,7 +1,6 @@
+import pandas as pd
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
-import pandas as pd
-from flask_httpauth import HTTPBasicAuth
 
 app = Flask(__name__)
 api = Api(app)

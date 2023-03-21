@@ -2,16 +2,15 @@ import logging
 import logging.config
 import logging.handlers
 import threading
-from flask_cors import CORS
 
 from flask import Flask
+from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_restful import Api
 
 from src.rely import db, ma
-
 from src.rely.utils.envvars import load_env_vars
-from flask_restful import Api
 
 API_ROOT = "/rely/apis"
 V1_API_ROOT = "{}/v1".format(API_ROOT)
@@ -43,8 +42,6 @@ def create_app():
         from src.rely.utils.errorhandler import errors
         from src.rely.resources.Health import Health
         from src.rely.resources.Autocomplete import Autocomplete
-        from flask_limiter import Limiter
-        from flask_limiter.util import get_remote_address
         ma.init_app(app)
 
         api.add_resource(Health, API_ROOT + "/health")

@@ -1,4 +1,3 @@
-import redis
 from flask import abort
 
 from src.rely.utils.configs import AppConfig

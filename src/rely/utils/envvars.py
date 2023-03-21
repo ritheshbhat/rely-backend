@@ -1,8 +1,6 @@
 import logging
 from os import environ
 
-from werkzeug.exceptions import abort
-
 log = logging.getLogger(__name__)
 
 

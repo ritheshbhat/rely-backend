@@ -3,11 +3,10 @@ import logging.config
 import logging.handlers
 
 from flask import Flask
+from flask_restful import Api
 
 from src.rely.cache.redis import start_redis
 from src.rely.utils.envvars import load_env_vars
-from flask_restful import Api
-
 from test.rely import ma, db
 from test.rely.utils.db_utils import setup_database
 

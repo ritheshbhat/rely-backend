@@ -1,5 +1,7 @@
 import threading
+
 import requests
+
 
 def poll_new_url():
     # Poll new URL every 60 seconds

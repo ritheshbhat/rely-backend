@@ -1,7 +1,4 @@
-from sqlite3 import Date
-
 from sqlalchemy import Column, Integer, String, Float, DateTime
-
 
 from src.rely import db
 
